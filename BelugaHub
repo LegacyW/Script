@@ -1,0 +1,263 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Beluga Hub",
+   LoadingTitle = "Beluga Hub",
+   LoadingSubtitle = "By Legacy",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "FUkQdvPN2g", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Beluga Hub",
+      Subtitle = "FUkQdvPN2g",
+      Note = "Join Discord",
+      FileName = "KeyFile", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Beluga"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("Main", nil) -- Title, Image
+local TeleportsTab = Window:CreateTab("Teleports", nil) -- Title, Image
+local FunTab = Window:CreateTab("Fun", nil) -- Title, Image
+local AbusiveTab = Window:CreateTab("Abusive", nil) -- Title, Image
+local MiscTab= Window:CreateTab("Misc", nil) -- Title, Image
+
+local Section = MainTab:CreateSection("Main")
+local Section = TeleportsTab:CreateSection("Teleports")
+local Section = FunTab:CreateSection("Fun")
+local Section = AbusiveTab:CreateSection("Abusive")
+local Section = MiscTab:CreateSection("Misc")
+
+local Input = MainTab:CreateInput({
+    Name = "Deploy As -Noob Class- ",
+    PlaceholderText = "Role",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local args = {
+            [1] = "Noob",  -- This can be a fixed argument if required
+            [2] = Text     -- Use the input text as the role
+        }
+
+        -- This calls a server function with the arguments updated by the text input
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Deploy"):FireServer(unpack(args))
+    end,
+})
+
+local Input = MainTab:CreateInput({
+    Name = "Deploy As -Zombie Class- ",
+    PlaceholderText = "Role",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local args = {
+            [1] = "Zombie",  -- This can be a fixed argument if required
+            [2] = Text     -- Use the input text as the role
+        }
+
+        -- This calls a server function with the arguments updated by the text input
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Deploy"):FireServer(unpack(args))
+    end,
+})
+
+local Input = MainTab:CreateInput({
+    Name = "Deploy As -Human Class- ",
+    PlaceholderText = "Role",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local args = {
+            [1] = Text -- Use the input text as the role
+        }
+
+        -- This calls a server function with the arguments updated by the text input
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("HumanDeploy"):FireServer(unpack(args))
+    end,
+})
+
+local Button = FunTab:CreateButton({
+   Name = "Ally Drop (Must have in Inv)",
+   Callback = function()
+       local player = game:GetService("Players").LocalPlayer
+local character = player.Character
+
+if character and character:FindFirstChild("HumanoidRootPart") then
+    local position = character.HumanoidRootPart.Position
+    local args = {
+        [1] = position
+    }
+
+    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Ally Drop").Airstrike:FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
+
+local Button = AbusiveTab:CreateButton({
+   Name = "Guard Post (Must Hold)",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character
+
+-- Check if the player's character and its HumanoidRootPart exist
+if character and character:FindFirstChild("HumanoidRootPart") then
+    -- Get the character's position and CFrame
+    local position = character.HumanoidRootPart.Position
+    local orientation = character.HumanoidRootPart.CFrame.LookVector
+    
+    -- Define the distance you want the guard post to be spawned from the character
+    local distance = 3 -- Change this value as needed
+    
+    -- Calculate the new position by adding the LookVector multiplied by the distance
+    local newPosition = position + (orientation * distance)
+
+    local args = {
+        [1] = CFrame.new(newPosition)
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("PlaceGuardPost"):FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
+
+local Button = MiscTab:CreateButton({
+   Name = "Equip Tools -Tip: When using Deploy, U can deploy multiple times",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local backpack = player.Backpack
+
+-- Check if the player's Backpack exists
+if backpack then
+    -- Loop through each child in the Backpack
+    for _, tool in ipairs(backpack:GetChildren()) do
+        -- Check if the child is a Tool
+        if tool:IsA("Tool") then
+            -- Equip the tool
+            tool.Parent = player.Character
+        end
+    end
+else
+    warn("Backpack not found.")
+end
+
+   end,
+})
+
+local Button = FunTab:CreateButton({
+   Name = "Cover Station (Must hold)",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character
+
+-- Check if the player's character and its HumanoidRootPart exist
+if character and character:FindFirstChild("HumanoidRootPart") then
+    -- Get the character's position and CFrame
+    local position = character.HumanoidRootPart.Position
+    local orientation = character.HumanoidRootPart.CFrame.LookVector
+    local upVector = character.HumanoidRootPart.CFrame.UpVector
+
+    -- Define the distance you want the station to be spawned from the character
+    local distance = 4 -- Change this value as needed
+    
+    -- Calculate the new position by subtracting the UpVector multiplied by the distance
+    local newPosition = position - (upVector * distance)
+
+    local args = {
+        [1] = CFrame.new(newPosition)
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("PlaceStation"):FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
+
+local Slider = MainTab:CreateSlider({
+   Name = "Walkspeed",
+   Range = {0, 30},
+   Increment = 1,
+   Suffix = "Walkspeed",
+   CurrentValue = 16,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+   end,
+})
+
+local Button = FunTab:CreateButton({
+   Name = "Barbwire Placing (Hold)",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character
+
+-- Check if the player's character and its HumanoidRootPart exist
+if character and character:FindFirstChild("HumanoidRootPart") then
+    -- Get the character's position and orientation
+    local position = character.HumanoidRootPart.Position
+    local orientation = character.HumanoidRootPart.CFrame
+
+    -- Define the distance you want the barbwire to be spawned from the character
+    local distance = 3 -- Change this value as needed
+    
+    -- Calculate the new position by adding the forward direction multiplied by the distance
+    local newPosition = position + (orientation.LookVector * distance)
+
+    local args = {
+        [1] = CFrame.new(newPosition)
+    }
+
+    -- Fire the server event to place the barbwire
+    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("PlaceBarbwire"):FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
+
+local Button = MiscTab:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+   loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+   end,
+})
+
+local Button = FunTab:CreateButton({
+   Name = "GunTurret Placing (Hold)",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character
+
+-- Check if the player's character and its HumanoidRootPart exist
+if character and character:FindFirstChild("HumanoidRootPart") then
+    -- Get the character's position and orientation
+    local position = character.HumanoidRootPart.Position
+    local orientation = character.HumanoidRootPart.CFrame
+
+    -- Define the distance you want the turret to be spawned from the character
+    local distance = 3 -- Change this value as needed
+    
+    -- Calculate the new position by adding the forward direction multiplied by the distance
+    local newPosition = position + (orientation.LookVector * distance)
+
+    local args = {
+        [1] = CFrame.new(newPosition)
+    }
+
+    -- Fire the server event to place the gun turret
+    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("PlaceGunTurret"):FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
