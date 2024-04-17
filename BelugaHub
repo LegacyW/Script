@@ -261,3 +261,40 @@ else
 end
    end,
 })
+
+local Button = FunTab:CreateButton({
+   Name = "Beartrap Placing",
+   Callback = function()
+   local player = game.Players.LocalPlayer
+local character = player.Character
+
+-- Check if the player's character and its HumanoidRootPart exist
+if character and character:FindFirstChild("HumanoidRootPart") then
+    -- Get the character's position and orientation
+    local position = character.HumanoidRootPart.Position
+    local orientation = character.HumanoidRootPart.CFrame
+
+    -- Define the distance you want the beartrap to be spawned from the character
+    local distance = 3 -- Change this value as needed
+    
+    -- Calculate the new position by adding the forward direction multiplied by the distance
+    local newPosition = position + (orientation.LookVector * distance)
+
+    local args = {
+        [1] = CFrame.new(newPosition)
+    }
+
+    -- Fire the server event to place the beartrap
+    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("PlaceBeartrap"):FireServer(unpack(args))
+else
+    warn("Character or HumanoidRootPart not found.")
+end
+   end,
+})
+
+local Button = FunTab:CreateButton({
+   Name = "Care Package (Must be in inv)",
+   Callback = function()
+   game:GetService("Players").LocalPlayer.Character:FindFirstChild("Care Package").ServerMain.Fire:FireServer()
+   end,
+})
